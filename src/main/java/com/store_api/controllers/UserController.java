@@ -8,10 +8,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -47,6 +50,7 @@ public class UserController {
     }
 
     @PostMapping("")
+    // MethodArgumentNotValidException
     public ResponseEntity<UserDto.UserInfo> createUser(@Valid @RequestBody UserDto.RegisterUserRequest request, UriComponentsBuilder uriBuilder){
         var user = userMapper.toEntity(request);
         userRepository.save(user);
