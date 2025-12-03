@@ -51,7 +51,13 @@ public class UserController {
 
     @PostMapping("")
     // MethodArgumentNotValidException
-    public ResponseEntity<UserDto.UserInfo> createUser(@Valid @RequestBody UserDto.RegisterUserRequest request, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto.RegisterUserRequest request, UriComponentsBuilder uriBuilder){
+        if (userRepository.existsByEmail(request.getEmail())) {
+            return ResponseEntity.badRequest().body( // STATUS: 400 Bad Request
+                    Map.of("email", "Email is already registered.")
+            );
+        }
+
         var user = userMapper.toEntity(request);
         userRepository.save(user);
 
