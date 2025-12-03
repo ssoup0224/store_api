@@ -1,5 +1,6 @@
 package com.store_api.dtos;
 
+import com.store_api.validation.Lowercase;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -26,6 +27,7 @@ public class UserDto {
 
         @NotBlank(message = "Email is required.")
         @Email(message = "Email must be valid.")
+        @Lowercase(message = "Email must be lowercase.")
         private String email;
 
         // @JsonInclude(JsonInclude.Include.NON_NULL) NULL 값을 json에 표시되지 않게 해준다
