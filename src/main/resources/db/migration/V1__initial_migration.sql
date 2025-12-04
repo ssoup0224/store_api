@@ -1,66 +1,74 @@
-create table categories
+CREATE TABLE addresses
 (
-    id   tinyint auto_increment
-        primary key,
-    name varchar(255) null
+    id      BIGINT AUTO_INCREMENT NOT NULL,
+    street  VARCHAR(255) NOT NULL,
+    city    VARCHAR(255) NOT NULL,
+    state   VARCHAR(255) NOT NULL,
+    zip     VARCHAR(255) NOT NULL,
+    user_id BIGINT       NOT NULL,
+    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
 );
 
-create table products
+CREATE TABLE categories
 (
-    id          bigint auto_increment
-        primary key,
-    description varchar(255)   null,
-    name        varchar(255)   null,
-    price       decimal(38, 2) null,
-    category_id tinyint        null,
-    constraint FKog2rp4qthbtt2lfyhfo32lsw9
-        foreign key (category_id) references categories (id)
+    id   TINYINT AUTO_INCREMENT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
 );
 
-create table users
+CREATE TABLE products
 (
-    id       bigint auto_increment
-        primary key,
-    email    varchar(255) null,
-    name     varchar(255) null,
-    password varchar(255) null
+    id            BIGINT AUTO_INCREMENT NOT NULL,
+    name          VARCHAR(255)   NOT NULL,
+    price         DECIMAL(10, 2) NOT NULL,
+    `description` LONGTEXT       NOT NULL,
+    category_id   TINYINT NULL,
+    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
 );
 
-create table addresses
+CREATE TABLE profiles
 (
-    id      bigint auto_increment
-        primary key,
-    city    varchar(255) null,
-    state   varchar(255) null,
-    street  varchar(255) null,
-    zip     varchar(255) null,
-    user_id bigint       null,
-    constraint FK1fa36y2oqhao3wgg2rw1pi459
-        foreign key (user_id) references users (id)
+    id             BIGINT NOT NULL,
+    bio            LONGTEXT NULL,
+    phone_number   VARCHAR(15) NULL,
+    date_of_birth  date NULL,
+    loyalty_points INT UNSIGNED DEFAULT 0 NULL,
+    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
 );
 
-create table profiles
+CREATE TABLE users
 (
-    id             bigint       not null
-        primary key,
-    bio            varchar(255) null,
-    date_of_birth  date         null,
-    loyalty_points int          null,
-    phone_number   varchar(255) null,
-    constraint FK55e5d3sfwkob62wtprm633alk
-        foreign key (id) references users (id),
-    constraint profiles_ibfk_1
-        foreign key (id) references users (id)
+    id       BIGINT AUTO_INCREMENT NOT NULL,
+    name     VARCHAR(255) NOT NULL,
+    email    VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    CONSTRAINT `PRIMARY` PRIMARY KEY (id)
 );
 
-create table wishlist
+CREATE TABLE wishlist
 (
-    user_id    bigint not null,
-    product_id bigint not null,
-    primary key (user_id, product_id),
-    constraint FK6p7qhvy1bfkri13u29x6pu8au
-        foreign key (product_id) references products (id),
-    constraint FKtrd6335blsefl2gxpb8lr0gr7
-        foreign key (user_id) references users (id)
+    product_id BIGINT NOT NULL,
+    user_id    BIGINT NOT NULL,
+    CONSTRAINT `PRIMARY` PRIMARY KEY (product_id, user_id)
 );
 
+ALTER TABLE addresses
+    ADD CONSTRAINT addresses_users_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE NO ACTION;
+
+CREATE INDEX addresses_users_id_fk ON addresses (user_id);
+
+ALTER TABLE products
+    ADD CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE NO ACTION;
+
+CREATE INDEX fk_category ON products (category_id);
+
+ALTER TABLE wishlist
+    ADD CONSTRAINT fk_wishlist_on_product FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE;
+
+ALTER TABLE wishlist
+    ADD CONSTRAINT fk_wishlist_on_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE NO ACTION;
+
+CREATE INDEX fk_wishlist_on_user ON wishlist (user_id);
+
+ALTER TABLE profiles
+    ADD CONSTRAINT profiles_ibfk_1 FOREIGN KEY (id) REFERENCES users (id) ON DELETE NO ACTION;
