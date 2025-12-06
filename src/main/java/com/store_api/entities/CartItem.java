@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Entity
@@ -26,4 +28,8 @@ public class CartItem {
     @ColumnDefault("1")
     @Column(name = "quantity")
     private Integer quantity;
+
+    public BigDecimal getTotalPrice() {
+        return product.getPrice().multiply(BigDecimal.valueOf(quantity));
+    }
 }

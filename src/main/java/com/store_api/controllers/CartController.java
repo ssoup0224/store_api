@@ -7,12 +7,14 @@ import com.store_api.entities.CartItem;
 import com.store_api.mappers.CartMapper;
 import com.store_api.repositories.CartRepository;
 import com.store_api.repositories.ProductRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -37,7 +39,7 @@ public class CartController {
     @PostMapping("/{cartId}/items")
     public ResponseEntity<CartItemDto.CartItemResponse> addToCart(@PathVariable UUID cartId,
             @RequestBody CartItemDto.AddItemToCartRequest request) {
-        var cart = cartRepository.findById(cartId).orElse(null);
+        var cart = cartRepository.getCartWithItems(cartId).orElse(null);
         if (cart == null) {
             return ResponseEntity.notFound().build(); // STATUS: 404 Not Found
             // 404 is when client requests a resource that does not exist
@@ -70,11 +72,31 @@ public class CartController {
 
     @GetMapping("/{cartId}")
     public ResponseEntity<CartDto> getCart(@PathVariable UUID cartId) {
-        var cart = cartRepository.findById(cartId).orElse(null);
+        var cart = cartRepository.getCartWithItems(cartId).orElse(null);
         if (cart == null) {
             return ResponseEntity.notFound().build(); // STATUS: 404 Not Found
         }
 
         return ResponseEntity.ok(cartMapper.toDto(cart)); // STATUS: 200 OK
+    }
+
+    @PatchMapping("/{cartId}/items/{productId}")
+    public ResponseEntity<?> updateItems (@PathVariable UUID cartId, @PathVariable Long productId, @Valid @RequestBody CartItemDto.UpdateCartItemRequest request){
+        var cart = cartRepository.getCartWithItems(cartId).orElse(null);
+        if (cart == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Cart not found.")); // STATUS: 404 Not Found
+        }
+
+        var cartItem = cart.getCartItems().stream().filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst().orElse(null);
+        if (cartItem == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Product not found in cart."));
+        }
+
+        cartItem.setQuantity(request.getQuantity());
+        cartRepository.save(cart);
+        return ResponseEntity.ok(cartMapper.toDto(cartItem));
+
+
     }
 }

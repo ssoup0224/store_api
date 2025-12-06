@@ -11,14 +11,14 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CartMapper {
     @Mapping(target = "items", source = "cartItems")
-    @Mapping(target = "totalPrice", expression = "java(cart.getCartItems().stream().map(item -> item.getProduct().getPrice().multiply(java.math.BigDecimal.valueOf(item.getQuantity()))).reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add))")
+    @Mapping(target = "totalPrice", expression = "java(cart.getTotalPrice())")
     CartDto toDto(Cart cart);
 
     // @Mapping(target = "totalPrice", expression =
     // "java(cartItem.CartItemDtoResponse.getTotalPrice()")
     // CartItemDto.CartItemDtoResponse toDtoResponse(CartItem cartItem);
 
-    @Mapping(target = "totalPrice", expression = "java(cartItem.getProduct().getPrice().multiply(java.math.BigDecimal.valueOf(cartItem.getQuantity())))")
+    @Mapping(target = "totalPrice", expression = "java(cartItem.getTotalPrice())")
     CartItemDto.CartItemResponse toDto(CartItem cartItem);
 
     CartItemDto.CartProductDto toDto(Product product);
