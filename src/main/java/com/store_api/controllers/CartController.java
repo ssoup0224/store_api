@@ -35,7 +35,8 @@ public class CartController {
     }
 
     @PostMapping("/{cartId}/items")
-    public ResponseEntity<CartItemDto> addToCart(@PathVariable UUID cartId, @RequestBody CartItemDto.AddItemToCartRequest request) {
+    public ResponseEntity<CartItemDto.CartItemResponse> addToCart(@PathVariable UUID cartId,
+            @RequestBody CartItemDto.AddItemToCartRequest request) {
         var cart = cartRepository.findById(cartId).orElse(null);
         if (cart == null) {
             return ResponseEntity.notFound().build(); // STATUS: 404 Not Found
@@ -48,7 +49,8 @@ public class CartController {
             // 400 is when client sends a request with invalid data
         }
 
-        var cartItem = cart.getCartItems().stream().filter(item -> item.getProduct().getId().equals(product.getId())).findFirst().orElse(null);
+        var cartItem = cart.getCartItems().stream().filter(item -> item.getProduct().getId().equals(product.getId()))
+                .findFirst().orElse(null);
         if (cartItem != null) {
             cartItem.setQuantity(cartItem.getQuantity() + 1);
         } else {
@@ -61,13 +63,13 @@ public class CartController {
 
         cartRepository.save(cart);
 
-        var cartItemDto = cartMapper.toDto(cartItem);
+        CartItemDto.CartItemResponse cartItemDto = cartMapper.toDto(cartItem);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(cartItemDto); // STATUS: 201 Created
     }
 
     @GetMapping("/{cartId}")
-    public ResponseEntity<CartDto> getCartById(@PathVariable UUID cartId) {
+    public ResponseEntity<CartDto> getCart(@PathVariable UUID cartId) {
         var cart = cartRepository.findById(cartId).orElse(null);
         if (cart == null) {
             return ResponseEntity.notFound().build(); // STATUS: 404 Not Found

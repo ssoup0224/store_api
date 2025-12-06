@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -22,7 +21,8 @@ public class ProductController {
     private final CategoryRepository categoryRepository;
 
     @GetMapping("")
-    public List<ProductDto.ProductInfo> getAllProducts(@RequestParam(name = "categoryId", required = false) Byte categoryId) {
+    public List<ProductDto.ProductResponse> getAllProducts(
+            @RequestParam(name = "categoryId", required = false) Byte categoryId) {
         List<Product> products;
         if (categoryId != null) {
             products = productRepository.findByCategoryId(categoryId);
@@ -33,7 +33,8 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ProductDto.ProductInfo> createProduct(@RequestBody ProductDto.ProductInfo productDto, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<ProductDto.ProductResponse> createProduct(@RequestBody ProductDto.ProductRequest productDto,
+            UriComponentsBuilder uriComponentsBuilder) {
         var category = categoryRepository.findById(productDto.getCategoryId()).orElse(null);
         if (category == null) {
             return ResponseEntity.badRequest().build(); // STATUS: 400 Bad Request
@@ -42,19 +43,21 @@ public class ProductController {
         var product = productMapper.toEntity(productDto);
         product.setCategory(category);
         productRepository.save(product);
-        productDto.setId(product.getId());
 
-        var uri = uriComponentsBuilder.path("/products/{id}").buildAndExpand(productDto.getId()).toUri();
+        var responseDto = productMapper.toDto(product);
+
+        var uri = uriComponentsBuilder.path("/products/{id}").buildAndExpand(product.getId()).toUri();
         /**
          * location of the new object/resource that is created
          * ex: localhost:8080/products/5
          */
 
-        return ResponseEntity.created(uri).body(productDto); // STATUS: 201 Created
+        return ResponseEntity.created(uri).body(responseDto); // STATUS: 201 Created
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ProductDto.ProductInfo> updateProduct(@PathVariable Long id, @RequestBody ProductDto.ProductInfo productDto) {
+    public ResponseEntity<ProductDto.ProductResponse> updateProduct(@PathVariable Long id,
+            @RequestBody ProductDto.ProductRequest productDto) {
         var category = categoryRepository.findById(productDto.getCategoryId()).orElse(null);
         if (category == null) {
             return ResponseEntity.badRequest().build(); // STATUS: 400 Bad Request
@@ -69,9 +72,7 @@ public class ProductController {
         product.setCategory(category);
         productRepository.save(product);
 
-        productDto.setId(product.getId());
-
-        return ResponseEntity.ok(productDto); // STATUS: 200 OK
+        return ResponseEntity.ok(productMapper.toDto(product)); // STATUS: 200 OK
     }
 
     @DeleteMapping("/{id}")
