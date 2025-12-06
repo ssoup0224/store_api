@@ -22,6 +22,7 @@ public class Cart {
     @Column(name = "date_created", insertable = false, updatable = false)
     private LocalDate dateCreated;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true) // ALL: cascade all operations
+                                                                                   // including persist
     private Set<CartItem> cartItems = new LinkedHashSet<>();
 }
