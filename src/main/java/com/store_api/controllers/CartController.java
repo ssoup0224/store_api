@@ -51,16 +51,7 @@ public class CartController {
             // 400 is when client sends a request with invalid data
         }
 
-        var cartItem = cart.getItem(product.getId());
-        if (cartItem != null) {
-            cartItem.setQuantity(cartItem.getQuantity() + 1);
-        } else {
-            cartItem = new CartItem();
-            cartItem.setProduct(product);
-            cartItem.setQuantity(1);
-            cartItem.setCart(cart);
-            cart.getCartItems().add(cartItem);
-        }
+        var cartItem = cart.addItem(product);
 
         cartRepository.save(cart);
 
