@@ -98,4 +98,16 @@ public class CartController {
         cartRepository.save(cart);
         return ResponseEntity.noContent().build(); // STATUS: 204 No Content
     }
+
+    @DeleteMapping("/{cartId}/items")
+    public ResponseEntity<?> clearCart (@PathVariable UUID cartId) {
+        var cart = cartRepository.getCartWithItems(cartId).orElse(null);
+        if (cart == null) {
+            return ResponseEntity.notFound().build(); // STATUS: 404 Not Found
+        }
+
+        cart.clearCart();
+        cartRepository.save(cart);
+        return ResponseEntity.noContent().build(); // STATUS: 204 No Content
+    }
 }
