@@ -5,6 +5,9 @@ import com.store_api.dtos.CartItemDto;
 import com.store_api.exceptions.CartNotFoundException;
 import com.store_api.exceptions.ProductNotFoundException;
 import com.store_api.services.CartService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/carts")
+@Tag(name = "Carts")
 public class CartController {
     private final CartService cartService;
 
@@ -30,7 +34,8 @@ public class CartController {
     }
 
     @PostMapping("/{cartId}/items")
-    public ResponseEntity<CartItemDto.CartItemResponse> addToCart(@PathVariable UUID cartId,
+    @Operation(summary = "Add product to cart")
+    public ResponseEntity<CartItemDto.CartItemResponse> addToCart(@Parameter(description = "ID of cart") @PathVariable UUID cartId,
             @RequestBody CartItemDto.AddItemToCartRequest request) {
         var cartItemDto = cartService.addItemToCart(cartId, request.getProductId());
 

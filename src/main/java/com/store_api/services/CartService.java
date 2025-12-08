@@ -83,5 +83,6 @@ public class CartService {
             throw new CartNotFoundException();
         }
         cart.clearCart();
+        cartRepository.save(cart);
     }
 }
