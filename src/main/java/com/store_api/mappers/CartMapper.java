@@ -22,4 +22,6 @@ public interface CartMapper {
     CartItemDto.CartItemResponse toDto(CartItem cartItem);
 
     CartItemDto.CartProductDto toDto(Product product);
+
+    CartItemDto.UpdateCartItemRequest toDtoRequest(CartItem cartItem);
 }
