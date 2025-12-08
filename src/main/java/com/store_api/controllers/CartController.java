@@ -79,13 +79,23 @@ public class CartController {
 
         var cartItem = cart.getItem(productId);
         if (cartItem == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Product not found in cart."));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Product not found in cart.")); // STATUS: 404 Not Found
         }
 
         cartItem.setQuantity(request.getQuantity());
         cartRepository.save(cart);
-        return ResponseEntity.ok(cartMapper.toDto(cartItem));
+        return ResponseEntity.ok(cartMapper.toDto(cartItem)); // STATUS: 200 OK
+    }
 
+    @DeleteMapping("/{cartId}/items/{productId}")
+    public ResponseEntity<?> removeItem(@PathVariable UUID cartId, @PathVariable Long productId) {
+        var cart = cartRepository.getCartWithItems(cartId).orElse(null);
+        if (cart == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Cart not found."));
+        }
 
+        cart.removeItem(productId);
+        cartRepository.save(cart);
+        return ResponseEntity.noContent().build(); // STATUS: 204 No Content
     }
 }
