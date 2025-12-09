@@ -1,6 +1,7 @@
 package com.store_api.controllers;
 
 import com.store_api.dtos.UserDto;
+import com.store_api.entities.Role;
 import com.store_api.mappers.UserMapper;
 import com.store_api.repositories.UserRepository;
 import jakarta.validation.Valid;
@@ -62,6 +63,7 @@ public class UserController {
 
         var user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         userRepository.save(user);
 
         var userDto = userMapper.toDto(user);
