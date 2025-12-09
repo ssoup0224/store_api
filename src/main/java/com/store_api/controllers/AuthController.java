@@ -1,6 +1,8 @@
 package com.store_api.controllers;
 
 import com.store_api.dtos.AuthDto;
+import com.store_api.dtos.JwtResponseDto;
+import com.store_api.services.JwtService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,12 +17,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody AuthDto.LoginRequest request) {
+    public ResponseEntity<JwtResponseDto> login(@Valid @RequestBody AuthDto.LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
-        return ResponseEntity.ok().build(); // STATUS: 200 OK
+        var token = jwtService.generateToken(request.getEmail());
+
+        return ResponseEntity.ok(new JwtResponseDto(token)); // STATUS: 200 OK
     }
 
     @ExceptionHandler(BadCredentialsException.class)
