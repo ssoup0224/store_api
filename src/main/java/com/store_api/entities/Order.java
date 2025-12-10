@@ -48,4 +48,8 @@ public class Order {
         });
         return order;
     }
+
+    public boolean isCustomerEqualsCurrentUser(User user) {
+        return this.customer.equals(user);
+    }
 }
