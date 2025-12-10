@@ -1,6 +1,7 @@
 package com.store_api.services;
 
 import com.store_api.config.JwtConfig;
+import com.store_api.entities.Role;
 import com.store_api.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -56,5 +57,9 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+
+    public Role  getRoleFromToken(String token) {
+        return Role.valueOf(getClaims(token).get("role", String.class));
     }
 }
