@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public class OrderDto {
@@ -21,5 +24,15 @@ public class OrderDto {
     @AllArgsConstructor
     public static class CheckOutResponse {
         private Long orderId;
+    }
+
+    @Getter
+    @Setter
+    public static class OrderInfoDto {
+        private Long id;
+        private String status;
+        private LocalDateTime createdAt;
+        private List<OrderItemDto.OrderItemResponse> items;
+        private BigDecimal totalPrice;
     }
 }
