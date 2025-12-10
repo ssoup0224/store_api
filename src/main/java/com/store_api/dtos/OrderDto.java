@@ -1,6 +1,7 @@
 package com.store_api.dtos;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ public class OrderDto {
 
     @Getter
     @Setter
+    @AllArgsConstructor
     public static class CheckOutResponse {
         private Long orderId;
     }
