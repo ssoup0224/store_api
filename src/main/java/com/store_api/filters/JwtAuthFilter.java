@@ -31,15 +31,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         var token = authHeader.replace("Bearer ", "");
-        System.out.println("Processing token: " + token);
         var jwt = jwtService.parseToken(token);
         if (jwt == null) {
-            System.out.println("JWT is null");
             filterChain.doFilter(request, response);
             return;
         }
         if (jwt.isExpired()) {
-            System.out.println("JWT is expired");
             filterChain.doFilter(request, response);
             return;
         }

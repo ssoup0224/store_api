@@ -43,7 +43,6 @@ public class JwtService {
             var claims = getClaims(token);
             return new Jwt(claims, jwtConfig.getSecretKey());
         } catch (JwtException e) {
-            e.printStackTrace();
             return null;
         }
     }
