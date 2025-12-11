@@ -1,5 +1,6 @@
-package com.store_api.config;
+package com.store_api.users;
 
+import com.store_api.config.SecurityRules;
 import com.store_api.users.entities.Role;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
