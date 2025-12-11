@@ -1,10 +1,10 @@
 package com.store_api.mappers;
 
-import com.store_api.dtos.CartDto;
-import com.store_api.dtos.CartItemDto;
-import com.store_api.entities.Cart;
-import com.store_api.entities.CartItem;
-import com.store_api.entities.Product;
+import com.store_api.carts.dtos.CartDto;
+import com.store_api.carts.dtos.CartItemDto;
+import com.store_api.carts.entities.Cart;
+import com.store_api.carts.entities.CartItem;
+import com.store_api.products.entities.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

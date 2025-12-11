@@ -1,7 +1,7 @@
 package com.store_api.mappers;
 
-import com.store_api.dtos.ProductDto;
-import com.store_api.entities.Product;
+import com.store_api.products.dtos.ProductDto;
+import com.store_api.products.entities.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

@@ -1,8 +1,8 @@
 package com.store_api.config;
 
-import com.store_api.entities.Role;
+import com.store_api.users.entities.Role;
 import com.store_api.filters.JwtAuthFilter;
-import com.store_api.services.UserService;
+import com.store_api.users.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

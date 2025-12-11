@@ -1,6 +1,6 @@
 package com.store_api.filters;
 
-import com.store_api.services.JwtService;
+import com.store_api.authentication.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
